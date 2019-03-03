@@ -3,10 +3,9 @@ class Tile extends Triangle{
   int[] values;
   int angle;
 
-  Tile(int v1, int v2, int v3) {
-    super(0, 0, true, new PVector(500, 500));
+  Tile(int v1, int v2, int v3, boolean upside) {
+    super(0, 0, upside);
     
-    pos = new PVector(500, 500);
     angle = 0;
 
     values = new int[3];
@@ -18,7 +17,7 @@ class Tile extends Triangle{
   void draw() {
     pushMatrix();
     translate(pos.x, pos.y);
-    if (!left) rotate(radians(60));
+    if (!upside) rotate(PI / 3);
     shape(shape, 0, 0);
 
     stroke(255, 0, 0);
@@ -47,26 +46,26 @@ class Tile extends Triangle{
   void rotateRight() {
     angle = (angle + 1) % 6;
 
-    if (!left) {
+    if (!upside) {
       int v = values[0];
       values[0] = values[1];
       values[1] = values[2];
       values[2] = v;
     }
 
-    left = !left;
+    upside = !upside;
   }
 
-  void rotateLeft() {
+  void rotateupside() {
     angle = (angle + 5) % 6;
 
-    if (left) {
+    if (upside) {
       int v = values[2];
       values[2] = values[1];
       values[1] = values[0];
       values[0] = v;
     }
 
-    left = !left;
+    upside = !upside;
   }
 }
