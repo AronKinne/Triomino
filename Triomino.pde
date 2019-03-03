@@ -1,4 +1,5 @@
-int size = 150;
+final int size = 150;
+final float r = sqrt(3) / 6 * size;
 
 Tile t;
 
