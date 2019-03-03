@@ -2,19 +2,27 @@ class Tile extends Triangle{
 
   int[] values;
   int angle;
+  boolean attToMouse;
 
-  Tile(int v1, int v2, int v3, boolean upside) {
-    super(0, 0, upside);
+  Tile(int v1, int v2, int v3) {
+    this(0, 0, v1, v2, v3, 0, false);
+  }
+  
+  Tile(int x, int y, int v1, int v2, int v3, int angle, boolean upside) {
+    super(x, y, upside);
     
-    angle = 0;
-
     values = new int[3];
     values[0] = v1;
     values[1] = v2;
     values[2] = v3;
+    
+    this.angle = angle;
+    attToMouse = false;
   }
 
   void draw() {
+    if(attToMouse) pos = new PVector(mouseX, mouseY);
+    
     pushMatrix();
     translate(pos.x, pos.y);
     if (!upside) rotate(PI / 3);
@@ -42,6 +50,20 @@ class Tile extends Triangle{
 
     popMatrix();
   }
+  
+  Tile copy(int x, int y, boolean rotate) {
+    if(rotate) rotateRight();
+    return new Tile(x, y, values[0], values[1], values[2], angle, upside);
+  }
+  
+  void attachToMouse() {
+    attToMouse = true;
+  }
+  
+  void releaseFromMouse(PVector pos) {
+    attToMouse = false;
+    this.pos = pos.copy();
+  }
 
   void rotateRight() {
     angle = (angle + 1) % 6;
@@ -56,7 +78,7 @@ class Tile extends Triangle{
     upside = !upside;
   }
 
-  void rotateupside() {
+  void rotateLeft() {
     angle = (angle + 5) % 6;
 
     if (upside) {

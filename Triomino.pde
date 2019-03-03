@@ -3,25 +3,40 @@ final float r = sqrt(3) / 6 * size;
 final float h = 3 * r;
 
 Grid grid;
-Tile t1, t2;
+Tile current;
 
 void setup() {
   size(1600, 900);
-  
+
   grid = new Grid();
-  t1 = new Tile(1, 3, 5, true);
-  t2 = new Tile(0, 2, 4, false);
+  current = new Tile(1, 2, 3);
+  current.attachToMouse();
 }
 
 void draw() {
   background(255);
-  
+
   grid.draw();
-  //t1.draw();
-  //t2.draw();
+  if (current != null) current.draw();
+}
+
+void newTile() {
+  current = new Tile(floor(random(6)), floor(random(6)), floor(random(6)));
+  current.attachToMouse();
 }
 
 void mousePressed() {
-  //if(mouseButton == RIGHT) t.rotateRight();
-  //else if(mouseButton == LEFT) t.rotateupside();
+  if (mouseButton == LEFT && current != null) {
+    if (grid.addTile(current, mouseX, mouseY)) {
+      newTile();
+    }
+  } else println(grid.getCoords(mouseX, mouseY));
+}
+
+void keyPressed() {
+  if (current != null) {
+    if (keyCode == LEFT) current.rotateLeft(); 
+    else if (keyCode == RIGHT) current.rotateRight();
+  }
+  if(key == ' ') newTile();
 }
