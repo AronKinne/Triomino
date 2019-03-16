@@ -1,6 +1,7 @@
 final int size = 100;
 final float r = sqrt(3) / 6 * size;
 final float h = 3 * r;
+boolean debug = false;
 
 Grid grid;
 Tile current;
@@ -14,6 +15,10 @@ void setup() {
 
 void draw() {
   background(255);
+  
+  if(debug) {
+    grid.drawDebug(); 
+  }
 
   grid.draw();
   if (current != null) current.draw();
@@ -48,4 +53,5 @@ void keyPressed() {
     else if (keyCode == RIGHT) current.rotateRight();
   }
   if(key == ' ') newTile();
+  if(key == 'd') debug = !debug;
 }

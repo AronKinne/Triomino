@@ -61,9 +61,8 @@ class Grid {
   int getVertex(PVector p) {
     return getVertex((int)p.x, (int)p.y);
   }
-
-  void draw() {
-    /*
+  
+  void drawDebug() {
     for (Triangle t : triangles) {
       t.draw();
     }
@@ -78,8 +77,9 @@ class Grid {
       textSize(20);
       text((int)v.z, v.x * size * .5, v.y * h);
     }
-    */
-    
+  }
+
+  void draw() {    
     for (Tile t : tiles) {
       t.draw();
     }
