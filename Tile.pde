@@ -28,7 +28,7 @@ class Tile extends Triangle{
     if (!upside) rotate(PI / 3);
     shape(shape, 0, 0);
 
-    stroke(255, 0, 0);
+    stroke(0, 0, 0);
     strokeWeight(size / 15);
     for (int i = 0; i < 3; i++) {
       int a = i == 1 ? 150 : 30;

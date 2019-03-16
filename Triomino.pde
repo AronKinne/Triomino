@@ -1,4 +1,4 @@
-final int size = 150;
+final int size = 100;
 final float r = sqrt(3) / 6 * size;
 final float h = 3 * r;
 
@@ -9,8 +9,7 @@ void setup() {
   size(1600, 900);
 
   grid = new Grid();
-  current = new Tile(1, 2, 3);
-  current.attachToMouse();
+  newTile();
 }
 
 void draw() {
@@ -30,7 +29,17 @@ void mousePressed() {
     if (grid.addTile(current, mouseX, mouseY)) {
       newTile();
     }
-  } else println(grid.getCoords(mouseX, mouseY));
+  } else if(mouseButton == RIGHT) {
+    newTile();
+  }
+}
+
+void mouseWheel(MouseEvent e) {
+  if(e.getCount() > 0) {
+    current.rotateRight();
+  } else if(e.getCount() < 0) {
+    current.rotateLeft();
+  }
 }
 
 void keyPressed() {
