@@ -111,7 +111,12 @@ class Grid {
     boolean bValid = bShould == -1 || bIs == bShould;
     boolean cValid = cShould == -1 || cIs == cShould;
     
-    return aValid && bValid && cValid;
+    int amtEmpty = 0;
+    if(aShould == -1) amtEmpty++;
+    if(bShould == -1) amtEmpty++;
+    if(cShould == -1) amtEmpty++;
+    
+    return aValid && bValid && cValid && amtEmpty <= 1;
   }
 
   void updateVertices(Tile tile, int x, int y) {
