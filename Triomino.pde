@@ -24,7 +24,7 @@ void setup() {
   }
   Collections.shuffle(tileset);
 
-  newTile(true);
+  newTile();
 }
 
 void draw() {
@@ -43,22 +43,26 @@ void draw() {
   text(tileset.size(), 20, 20);
 }
 
-void newTile(boolean keep) {
+void newTile() {
   if (tileset.size() > 0) {
     current = tileset.get(0);
     tileset.remove(0);
     current.attachToMouse();
-    if(keep) tileset.add(current);
+  } else {
+    current = null; 
   }
 }
 
 void mousePressed() {
   if (mouseButton == LEFT && current != null) {
     if (grid.addTile(current, mouseX, mouseY)) {
-      newTile(false);
+      newTile();
+    } else {
+      grid.moveTile(mouseX, mouseY);
     }
   } else if (mouseButton == RIGHT) {
-    newTile(true);
+    tileset.add(current);
+    newTile();
     //println(grid.getTile(grid.getCoords(mouseX, mouseY)), grid.getCoords(mouseX, mouseY));
   }
 }
@@ -76,6 +80,9 @@ void keyPressed() {
     if (keyCode == LEFT) current.rotateLeft(); 
     else if (keyCode == RIGHT) current.rotateRight();
   }
-  if (key == ' ') newTile(true);
+  if (key == ' ') {
+    tileset.add(current);
+    newTile();
+  }
   if (key == 'd') debug = !debug;
 }

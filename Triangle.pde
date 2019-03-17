@@ -1,5 +1,3 @@
-// http://www-cs-students.stanford.edu/~amitp/game-programming/grids/
-
 class Triangle {
 
   PVector pos;

@@ -26,6 +26,24 @@ class Grid {
     }
   }
 
+  ArrayList<Tile> getNeighbors(Tile tile, int x, int y) {
+    if (tile != null) {
+      ArrayList<Tile> neis = new ArrayList<Tile>();
+
+      if (getTile(x, y, !tile.upside) != null) neis.add(getTile(x, y, !tile.upside));
+      if (getTile(x + (tile.upside ? 1 : -1), y, !tile.upside) != null) neis.add(getTile(x + (tile.upside ? 1 : -1), y, !tile.upside));
+      if (tile.upside) {
+        if (getTile(x + (y % 2 == 0 ? 0 : 1), y + 1, false) != null) neis.add(getTile(x + (y % 2 == 0 ? 0 : 1), y + 1, false));
+      } else {
+        if (getTile(x - (y % 2 == 0 ? 1 : 0), y - 1, true) != null) neis.add(getTile(x - (y % 2 == 0 ? 1 : 0), y - 1, true));
+      }
+
+      return neis;
+    }
+
+    return null;
+  }
+
   void generateVertices() {
     int x = -1, y;
 
@@ -71,8 +89,6 @@ class Grid {
       stroke(255, 0, 0);
       fill(255, 0, 0);
       strokeWeight(3);
-      //point(v.x, v.y);
-      //point(v.x * size * .5, v.y * h);
       textAlign(CENTER, CENTER);
       textSize(20);
       text((int)v.z, v.x * size * .5, v.y * h);
@@ -131,28 +147,39 @@ class Grid {
     boolean bValid = bShould == -1 || bIs == bShould;
     boolean cValid = cShould == -1 || cIs == cShould;
 
-    int amtNei = 0;
-    
-    if (getTile(x, y, !tile.upside) != null) amtNei++;
-    if (getTile(x + (tile.upside ? 1 : -1), y, !tile.upside) != null) amtNei++;
-    if (tile.upside) {
-      if (getTile(x + (y % 2 == 0 ? 0 : 1), y + 1, false) != null) amtNei++;
-    } else {
-      if (getTile(x - (y % 2 == 0 ? 1 : 0), y - 1, true) != null) amtNei++;
-    }
-
     //return true;
-    return aValid && bValid && cValid && amtNei >= 1;
+    return aValid && bValid && cValid && getNeighbors(tile, x, y).size() >= 1;
   }
 
-  void updateVertices(Tile tile, int x, int y) {
+  void updateVertices(Tile tile, int x, int y, boolean up) {
     PVector a = new PVector(x + y % 2, y);
-    PVector b = new PVector(tile.upside ? x : x - 1 + y % 2, tile.upside ? y + 1 : y);
-    PVector c = new PVector(tile.upside ? x + 1 : x, y + 1);
+    PVector b = new PVector(up ? x : x - 1 + y % 2, up ? y + 1 : y);
+    PVector c = new PVector(up ? x + 1 : x, y + 1);
 
     setVertex((int)a.x, (int)a.y, tile.values[0]);
     setVertex((int)b.x, (int)b.y, tile.values[1]);
     setVertex((int)c.x, (int)c.y, tile.values[2]);
+  }
+
+  boolean moveTile(float mx, float my) {
+    for (Tile tile : tiles) {
+      if (tile.isPointIn(mx, my) && getNeighbors(tile, (int)tile.x, (int)tile.y).size() <= 1) {
+        tileset.add(0, current);
+        current = tile;
+        current.attachToMouse();
+
+        updateVertices(new Tile(-1, -1, -1), tile.x, tile.y, tile.upside);
+
+        for (Tile n : getNeighbors(tile, tile.x, tile.y)) {
+          updateVertices(n, n.x, n.y, n.upside);
+        }
+
+        tiles.remove(tile);
+        return true;
+      }
+    }
+
+    return false;
   }
 
   boolean addTile(Tile tile, float mx, float my) {
@@ -161,14 +188,14 @@ class Grid {
         if (tiles.size() == 0) {
           if (tri.isPointIn(mx, my)) {
             tiles.add(tile.copy(tri.x, tri.y, tile.upside != tri.upside));
-            updateVertices(tile, tri.x, tri.y);
+            updateVertices(tile, tri.x, tri.y, tri.upside);
             return true;
           }
         } else {
           if (tri.isPointIn(mx, my) && tile.upside == tri.upside) {
             if (grid.checkVertices(tile, tri.x, tri.y)) {
               tiles.add(tile.copy(tri.x, tri.y, false));
-              updateVertices(tile, tri.x, tri.y);
+              updateVertices(tile, tri.x, tri.y, tri.upside);
               return true;
             }
           }
