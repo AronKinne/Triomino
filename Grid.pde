@@ -14,8 +14,8 @@ class Grid {
   }
 
   void generateGrid() {
-    for (int u = 0; u <= floor(width / size); u++) {
-      for (int v = 0; v <= floor(height / size); v++) {
+    for (int u = 0; u < floor(width / size); u++) {
+      for (int v = 0; v <= floor(height / size) + 1; v++) {
         Triangle left = new Triangle(u, v, true);
         left.setStrokeCol(200, 200, 200);
         Triangle right = new Triangle(u, v, false);
@@ -61,7 +61,7 @@ class Grid {
   int getVertex(PVector p) {
     return getVertex((int)p.x, (int)p.y);
   }
-  
+
   void drawDebug() {
     for (Triangle t : triangles) {
       t.draw();
@@ -90,12 +90,32 @@ class Grid {
 
     for (Triangle tri : triangles) {
       if (tri.isPointIn(mx, my)) {
-        out = new PVector(tri.x, tri.y);
+        out = new PVector(tri.x, tri.y, tri.upside ? 1 : 0);
         break;
       }
     }
 
     return out;
+  }
+
+  Tile getTile(PVector pos) {
+    if (pos != null) {      
+      return getTile((int)pos.x, (int)pos.y, pos.z == 1 ? true : false);
+    }
+
+    return null;
+  }
+
+  Tile getTile(int x, int y, boolean up) {
+    int index = y * (width / size * 2) + x * 2 + (up ? 1 : 0);
+
+    if (index <= triangles.size()) {
+      for (Tile tile : tiles) {
+        if (tile.x == x && tile.y == y && tile.upside == up) return tile;
+      }
+    }
+
+    return null;
   }
 
   boolean checkVertices(Tile tile, int x, int y) {
@@ -106,17 +126,23 @@ class Grid {
     int aShould = getVertex(new PVector(x + y % 2, y));
     int bShould = getVertex(new PVector(tile.upside ? x : x - 1 + y % 2, tile.upside ? y + 1 : y));
     int cShould = getVertex(new PVector(tile.upside ? x + 1 : x, y + 1));
-    
+
     boolean aValid = aShould == -1 || aIs == aShould;
     boolean bValid = bShould == -1 || bIs == bShould;
     boolean cValid = cShould == -1 || cIs == cShould;
+
+    int amtNei = 0;
     
-    int amtEmpty = 0;
-    if(aShould == -1) amtEmpty++;
-    if(bShould == -1) amtEmpty++;
-    if(cShould == -1) amtEmpty++;
-    
-    return aValid && bValid && cValid && amtEmpty <= 1;
+    if (getTile(x, y, !tile.upside) != null) amtNei++;
+    if (getTile(x + (tile.upside ? 1 : -1), y, !tile.upside) != null) amtNei++;
+    if (tile.upside) {
+      if (getTile(x + (y % 2 == 0 ? 0 : 1), y + 1, false) != null) amtNei++;
+    } else {
+      if (getTile(x - (y % 2 == 0 ? 1 : 0), y - 1, true) != null) amtNei++;
+    }
+
+    //return true;
+    return aValid && bValid && cValid && amtNei >= 1;
   }
 
   void updateVertices(Tile tile, int x, int y) {

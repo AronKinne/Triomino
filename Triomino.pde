@@ -59,6 +59,7 @@ void mousePressed() {
     }
   } else if (mouseButton == RIGHT) {
     newTile(true);
+    //println(grid.getTile(grid.getCoords(mouseX, mouseY)), grid.getCoords(mouseX, mouseY));
   }
 }
 
