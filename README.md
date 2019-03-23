@@ -20,7 +20,7 @@ Keyboard:
 
 ## Rules
 
-You can place tiles, which are in a shape of a triangle. Each tile has three numbers on it, one on each corner. The numbers are diplayed as points and can be any number between 0 and 5. If you placed a tile, you will get a new one from the set. In order to place another tile, the new tile must fit to at least one placed tile. This means the new tile must be placed right next to another tile and the two adjacent numbers must be the same. If your current tile can not be placed, you need to get a new one. In the top left corner you can see the number of the remaining tiles from the set. You can also replace already placed tiles. Therefor just click on the tile you want to replace. Then place the tile on a new spot. You won the game when you placed all tiles.
+You can place tiles, which are in a shape of a triangle. Each tile has three numbers on it, one on each corner. The numbers are diplayed as points and can be any number between 0 and 5. If you placed a tile, you will get a new one from the set. In order to place another tile, the new tile must have at least one neighbor and needs to fit to all adjacent tiles. This means the new tile must be placed next to another tile and the two adjacent numbers must be the same. If your current tile can not be placed, you are able to get a new one. In the top left corner you can see the number of the remaining tiles. You can also replace already placed tiles. Therefor just click on the tile you want to replace. Then place the tile on a new spot. To win the game, you need to place all tiles.
 
 ## Installing
 
