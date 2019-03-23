@@ -14,6 +14,7 @@ Keyboard:
     left arrow:   rotate tile left
     right arrow:  rotate tile right
     space:        new tile
+    N:            start a new game
     D:            turn debug mode on/off
 ```
 

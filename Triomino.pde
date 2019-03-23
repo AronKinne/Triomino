@@ -12,15 +12,19 @@ Tile current;
 void setup() {
   size(1600, 900);
 
+  reset();
+}
+
+void reset() {
   grid = new Grid();
-  
+
   tileset = new ArrayList<Tile>();
   for (int c = 0; c < 6; c++) {
-    for(int b = c; b < 6; b++) {
-      for(int a = b; a < 6; a++) {
+    for (int b = c; b < 6; b++) {
+      for (int a = b; a < 6; a++) {
         tileset.add(new Tile(a, b, c));
       }
-    }  
+    }
   }
   Collections.shuffle(tileset);
 
@@ -36,7 +40,7 @@ void draw() {
 
   grid.draw();
   if (current != null) current.draw();
-  
+
   textAlign(LEFT, TOP);
   textSize(20);
   fill(0);
@@ -49,7 +53,7 @@ void newTile() {
     tileset.remove(0);
     current.attachToMouse();
   } else {
-    current = null; 
+    current = null;
   }
 }
 
@@ -85,4 +89,5 @@ void keyPressed() {
     newTile();
   }
   if (key == 'd') debug = !debug;
+  if (key == 'n') reset();
 }
